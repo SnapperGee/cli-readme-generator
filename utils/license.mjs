@@ -1,9 +1,9 @@
-const licenseUrlRoot = Object.freeze({
+const licenseBadgeImgUrlRoot = Object.freeze({
     shields: "https://img.shields.io/badge/",
     buttons: "https://licensebuttons.net/l/"
 });
 
-const licenseUrlQuery = Object.freeze({
+const licenseBadgeImgUrlQuery = Object.freeze({
     apache: "License-Apache_2.0-blue.svg",
     boost: "License-Boost_1.0-lightblue.svg",
     bsd2: "License-BSD_2--Clause-orange.svg",
@@ -31,7 +31,7 @@ const licenseUrlQuery = Object.freeze({
     zlib: "License-Zlib-lightgrey.svg"
 });
 
-const creativeCommonLicenseUrlQuery = Object.freeze({
+const creativeCommonLicenseBadgeImgUrlQuery = Object.freeze({
     cco: Object.freeze({
         shield: "License-CC0_1.0-lightgrey.svg",
         button: "zero/1.0/80x15.png"
