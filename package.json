@@ -1,0 +1,15 @@
+{
+  "name": "cli-readme-generator",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Generate a readme file via an interactive CLI.",
+  "main": "index.mjs",
+  "type": "module",
+  "scripts": {
+  },
+  "author": "Snap",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^9.2.11"
+  }
+}
