@@ -1,5 +1,6 @@
 // TODO: Include packages needed for this application
 import { licenseValues } from "./utils/license.mjs";
+import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import {resolve as resolvePath } from "node:path";
 import { existsSync, lstatSync, writeFileSync } from "node:fs";
@@ -74,7 +75,16 @@ const initQuestions = [
         type: "input",
         name: "github",
         message: "Github username:",
-        filter: (input) => input.trim(),
+        filter: (input) => {
+            const trimmedInput = input.trim();
+
+            if (trimmedInput.length !== 0)
+            {
+                return `https://github.com/${trimmedInput}`;
+            }
+
+            return trimmedInput;
+        },
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -113,7 +123,21 @@ const initQuestions = [
         type: "input",
         name: "filePath",
         message: "File name or path:",
-        filter: (input) => input.trim(),
+        filter: (input) => {
+            let formattedInput = input.trim();
+
+            if (formattedInput.length !== 0)
+            {
+                if ( ! formattedInput.endsWith(".md"))
+                {
+                    formattedInput += ".md";
+                }
+
+                formattedInput = resolvePath(formattedInput);
+            }
+
+            return formattedInput;
+        },
         validate: (input) => input.length !== 0 || "A file name or path is required.",
         prefix: PREFIX
     },
@@ -123,7 +147,7 @@ const initQuestions = [
         message: (answers) => {
             const answersString = JSON.stringify(answers, undefined, 1);
             const formattedAnswersString = answersString.substring(1, answersString.length - 1);
-            return `${(formattedAnswersString)}\n\nCreate markdown with the above properties?`;
+            return `${(formattedAnswersString)}\nCreate markdown with the above properties?`;
         },
         prefix: PREFIX
     }
@@ -144,22 +168,22 @@ const init = async () =>
         generateMdConfirmation = initAnswers.confirm;
     }
 
-    const filePath = resolvePath(initAnswers.filePath);
+    console.log(initAnswers);
 
-    if (existsSync(filePath))
+    if (existsSync(initAnswers.filePath))
     {
-        const filePathLstat = lstatSync(filePath);
+        const filePathLstat = lstatSync(initAnswers.filePath);
 
         if ( ! filePathLstat.isFile())
         {
-            console.error(`Path points to non-file: ${filePath}`);
-            process.exit(444);
+            console.log(`Path points to non-file: ${initAnswers.filePath}`);
+            process.exit(0);
         }
 
         const confirmOverwritePrompt = {
             type: "confirm",
             name: "overwrite",
-            message: `File "${filePath}" already exists. Overwrite?`,
+            message: `File "${initAnswers.filePath}" already exists. Overwrite?`,
             prefix: PREFIX
         };
 
@@ -167,16 +191,16 @@ const init = async () =>
 
         if (overwriteConfirmation.overwrite === true)
         {
-            writeToFile(filePath, JSON.stringify(initAnswers, undefined, 2));
+            writeToFile(initAnswers.filePath, generateMarkdown(initAnswers));
         }
         else
         {
-            console.log(`Not overwriting file: "${filePath}"`);
+            console.log(`Not overwriting file: "${initAnswers.filePath}"`);
         }
     }
     else
     {
-        writeToFile(filePath, JSON.stringify(initAnswers, undefined, 2));
+        writeToFile(initAnswers.filePath, generateMarkdown(initAnswers));
     }
 };
 
