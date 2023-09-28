@@ -56,8 +56,8 @@ const initQuestions = [
     },
     {
         type: "input",
-        name: "test",
-        message: "Test:",
+        name: "tests",
+        message: "Tests:",
         filter: (input) => input.trim(),
         default: "",
         prefix: PREFIX,
