@@ -209,5 +209,6 @@ export const license = Object.freeze({
 });
 
 export const licenseKeys = Object.freeze(Object.keys(license));
+export const licenseValues = Object.freeze(Object.values(license));
 
 export default license;
