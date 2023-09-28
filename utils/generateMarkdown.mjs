@@ -14,9 +14,49 @@ const renderLicenseSection = (license) => licenseKeys.includes(license) ? `${ren
 
 // TODO: Create a function to generate markdown for README
 export const generateMarkdown = (data) => {
-  return `# ${data.title}
+    let markDownString = "# " + data.title;
 
-`;
+    if (data.description)
+    {
+        markDownString += `\n\n## Description\n\n${data.description}`;
+    }
+
+    if (data.installation)
+    {
+        markDownString += `\n\n## Installation\n\n${data.installation}`;
+    }
+
+    if (data.usage)
+    {
+        markDownString += `\n\n## Usage\n\n${data.usage}`;
+    }
+
+    if (data.contribution)
+    {
+        markDownString += `\n\n## Contribution Guidelines\n\n${data.contribution}`;
+    }
+
+    if (data.tests)
+    {
+        markDownString += `\n\n## Tests\n\n${data.tests}`;
+    }
+
+    if (data.github || data.email)
+    {
+        markDownString += "\n\n## Questions\n\nAny questions can be directed to";
+
+        if (data.github)
+        {
+            markDownString += ` Github [here](${data.github})`;
+        }
+
+        if (data.email)
+        {
+            markDownString += ` ${data.github ? "or ": ""}${data.email}`;
+        }
+    }
+
+    return markDownString;
 };
 
 export default generateMarkdown;
