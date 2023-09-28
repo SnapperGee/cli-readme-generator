@@ -1,20 +1,20 @@
-import { license as definedLicense, licenseKeys } from "./license.mjs";
+import { license as definedLicense, licenseKeys, licenseValues } from "./license.mjs";
 
 // TODO: Create a function that returns a license badge based on which license is passed in
 // If there is no license, return an empty string
-export const renderLicenseBadge = (license) => licenseKeys.includes(license) ? `![${license.name}](${license.shieldLink})`: "";
+export const renderLicenseBadge = (license) => `![${license.name}](${license.shieldLink})`;
 
 // TODO: Create a function that returns the license link
 // If there is no license, return an empty string
-const renderLicenseLink = (license) => licenseKeys.includes(license) ? `[${renderLicenseBadge(license)}](${license.clauseLink})`: "";
+const renderLicenseLink = (license) => `[${renderLicenseBadge(license)}](${license.clauseLink})`;
 
 // TODO: Create a function that returns the license section of README
 // If there is no license, return an empty string
-const renderLicenseSection = (license) => licenseKeys.includes(license) ? `${renderLicenseLink(license)}\n${definedLicense[license].name}` : "";
+const renderLicenseSection = (license) => licenseKeys.includes(license) ? `${renderLicenseLink(license)}\n${license.name}` : "";
 
 // TODO: Create a function to generate markdown for README
 export const generateMarkdown = (data) => {
-    let markDownString = "# " + data.title;
+    let markDownString = `# ${data.title}\n\n${renderLicenseLink(licenseValues.find(licenseValue => licenseValue.name === data.license))}`;
 
     if (data.description)
     {
