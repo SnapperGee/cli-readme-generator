@@ -15,15 +15,15 @@ const questions = [
         type: "input",
         name: "title",
         message: "Title:",
-        filter: (input) => input.trim(),
-        validate: (input) => input.length !== 0 || "A non-blank title is required.",
+        filter: (input) => new Promise((resolve) => resolve(input.trim())),
+        validate: (input) => new Promise((resolve) => resolve(input.length !== 0 || "A non-blank title is required.")),
         prefix: PREFIX
     },
     {
         type: "input",
         name: "description",
         message: "Description:",
-        filter: (input) => input.trim(),
+        filter: (input) => new Promise((resolve) => resolve(input.trim())),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -32,7 +32,7 @@ const questions = [
         type: "input",
         name: "installation",
         message: "Installation:",
-        filter: (input) => input.trim(),
+        filter: (input) => new Promise((resolve) => resolve(input.trim())),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -41,7 +41,7 @@ const questions = [
         type: "input",
         name: "usage",
         message: "Usage:",
-        filter: (input) => input.trim(),
+        filter: (input) => new Promise((resolve) => resolve(input.trim())),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -50,7 +50,7 @@ const questions = [
         type: "input",
         name: "contribution",
         message: "Contribution:",
-        filter: (input) => input.trim(),
+        filter: (input) => new Promise((resolve) => resolve(input.trim())),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -59,7 +59,7 @@ const questions = [
         type: "input",
         name: "tests",
         message: "Tests:",
-        filter: (input) => input.trim(),
+        filter: (input) => new Promise((resolve) => resolve(input.trim())),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -93,7 +93,7 @@ const questions = [
         type: "input",
         name: "email",
         message: "Email:",
-        filter: (input) => input.trim(),
+        filter: (input) => new Promise((resolve) => resolve(input.trim())),
         validate: (input) => {
             // Accept empty input as valid.
             if (input.length === 0) { return true; }
