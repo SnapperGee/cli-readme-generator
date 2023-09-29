@@ -20,7 +20,7 @@ export const generateMarkdown = (data) => {
     ];
 
     const tableOfContentsLines = [
-        "\n## Table of contents\n"
+        "\n\n## Table of contents\n"
     ];
 
     if (data.description)
@@ -43,7 +43,8 @@ export const generateMarkdown = (data) => {
 
     if (data.license)
     {
-
+        tableOfContentsLines.push(`1. [License](#license)`);
+        markdownLines.push(`\n\n## License\n\n### ${data.license}`);
     }
 
     if (data.contribution)
