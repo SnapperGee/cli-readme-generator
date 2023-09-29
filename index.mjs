@@ -3,7 +3,7 @@ import { licenseValues } from "./utils/license.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import {resolve as resolvePath } from "node:path";
-import { existsSync, lstat, lstatSync, writeFile } from "node:fs";
+import { existsSync, lstat, writeFile } from "node:fs";
 
 const PREFIX = ">>>";
 const BLANK_OMIT_SUFFIX = "(leave blank to omit)";
@@ -127,7 +127,7 @@ const questions = [
     },
     {
         type: "input",
-        name: "filePath",
+        name: "outputFilePath",
         message: "File name or path:",
         filter: (input) => new Promise( (resolve) =>
         {
@@ -200,7 +200,7 @@ export const init = async () =>
         answers = await inquirer.prompt(questions);
         generateMdConfirmation = answers.confirm;
     }
-    writeToFile(answers.filePath, generateMarkdown(answers), (err) => {
+    writeToFile(answers.outputFilePath, generateMarkdown(answers), (err) => {
         if (err) { throw err; }
 
         console.log(`README generated at: "${answers.filePath}"`);
