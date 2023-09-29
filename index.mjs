@@ -15,15 +15,15 @@ const questions = [
         type: "input",
         name: "title",
         message: "Title:",
-        filter: (input) => new Promise((resolve) => resolve(input.trim())),
-        validate: (input) => new Promise((resolve) => resolve(input.length !== 0 || "A non-blank title is required.")),
+        filter: (input) => Promise.resolve(input.trim()),
+        validate: (input) => Promise.resolve(input.length !== 0 || "A non-blank title is required."),
         prefix: PREFIX
     },
     {
         type: "input",
         name: "description",
         message: "Description:",
-        filter: (input) => new Promise((resolve) => resolve(input.trim())),
+        filter: (input) => Promise.resolve(input.trim()),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -32,7 +32,7 @@ const questions = [
         type: "input",
         name: "installation",
         message: "Installation:",
-        filter: (input) => new Promise((resolve) => resolve(input.trim())),
+        filter: (input) => Promise.resolve(input.trim()),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -41,7 +41,7 @@ const questions = [
         type: "input",
         name: "usage",
         message: "Usage:",
-        filter: (input) => new Promise((resolve) => resolve(input.trim())),
+        filter: (input) => Promise.resolve(input.trim()),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -50,7 +50,7 @@ const questions = [
         type: "input",
         name: "contribution",
         message: "Contribution:",
-        filter: (input) => new Promise((resolve) => resolve(input.trim())),
+        filter: (input) => Promise.resolve(input.trim()),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -59,7 +59,7 @@ const questions = [
         type: "input",
         name: "tests",
         message: "Tests:",
-        filter: (input) => new Promise((resolve) => resolve(input.trim())),
+        filter: (input) => Promise.resolve(input.trim()),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -80,10 +80,11 @@ const questions = [
 
             if (trimmedInput.length !== 0)
             {
-                return resolve(`https://github.com/${trimmedInput}`);
+                resolve(`https://github.com/${trimmedInput}`);
+                return;
             }
 
-            return resolve(trimmedInput);
+            resolve(trimmedInput);
         }),
         default: "",
         prefix: PREFIX,
@@ -93,13 +94,13 @@ const questions = [
         type: "input",
         name: "email",
         message: "Email:",
-        filter: (input) => new Promise((resolve) => resolve(input.trim())),
+        filter: (input) => Promise.resolve(input.trim()),
         validate: (input) => new Promise( (resolve) => {
             // Accept empty input as valid.
-            if (input.length === 0) { return resolve(true); }
+            if (input.length === 0) {resolve(true); return; }
 
             // Make sure there's no whitespace
-            if (input.search(/\s/g) !== -1) { return resolve(VALID_EMAIL_FORMAT_MSG); }
+            if (input.search(/\s/g) !== -1) { resolve(VALID_EMAIL_FORMAT_MSG); return; }
 
             // Count number of @ and period characters
             const charCount = Array.from(input)
@@ -111,10 +112,13 @@ const questions = [
                     {att: 0, period: 0}
                 );
 
-            if (charCount.att !== 1) { return resolve(VALID_EMAIL_FORMAT_MSG); }
-            if (charCount.period === 0) { return resolve(VALID_EMAIL_FORMAT_MSG); }
+            if (charCount.att !== 1 || charCount.period === 0)
+            {
+                resolve(VALID_EMAIL_FORMAT_MSG);
+                return;
+            }
 
-            return resolve(true);
+            resolve(true);
         }),
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
@@ -136,7 +140,7 @@ const questions = [
                 formattedInput = resolvePath(formattedInput);
             }
 
-            return resolve(formattedInput);
+            resolve(formattedInput);
         }),
         validate: (input) => new Promise((resolve) => resolve(input.length !== 0 || "A file name or path is required.")),
         prefix: PREFIX
