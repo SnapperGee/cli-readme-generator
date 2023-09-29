@@ -142,7 +142,7 @@ const questions = [
 
             resolve(formattedInput);
         }),
-        validate: (input) => new Promise((resolve) => resolve(input.length !== 0 || "A file name or path is required.")),
+        validate: (input) => Promise.resolve(input.length !== 0 || "A file name or path is required."),
         prefix: PREFIX
     },
     {
