@@ -3,7 +3,7 @@ import { licenseValues } from "./utils/license.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import {resolve as resolvePath } from "node:path";
-import { existsSync, lstatSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, writeFile } from "node:fs";
 
 const PREFIX = ">>>";
 const BLANK_OMIT_SUFFIX = "(leave blank to omit)";
@@ -154,7 +154,7 @@ const questions = [
 ];
 
 // TODO: Create a function to write README file
-const writeToFile = (fileName, data) => writeFileSync(fileName, data);
+const writeToFile = async (fileName, data, callback) => writeFile(fileName, data, callback);
 
 // TODO: Create a function to initialize app
 const init = async () =>
@@ -189,7 +189,15 @@ const init = async () =>
 
         if (overwriteConfirmation.overwrite === true)
         {
-            writeToFile(answers.filePath, generateMarkdown(answers));
+            writeToFile(answers.filePath, generateMarkdown(answers), (err) =>
+            {
+                if (err)
+                {
+                    throw err;
+                }
+
+                console.log(`README generated at: "${answers.filePath}"`);
+            });
         }
         else
         {
@@ -198,7 +206,14 @@ const init = async () =>
     }
     else
     {
-        writeToFile(answers.filePath, generateMarkdown(answers));
+        writeToFile(answers.filePath, generateMarkdown(answers), (err) => {
+            if (err)
+            {
+                throw err;
+            }
+
+            console.log(`README generated at: "${answers.filePath}"`);
+        });
     }
 };
 
