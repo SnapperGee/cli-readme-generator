@@ -10,7 +10,7 @@ const BLANK_OMIT_SUFFIX = "(leave blank to omit)";
 const VALID_EMAIL_FORMAT_MSG = "Email in the format of username@domain.ext containing no white spaces expected";
 
 // TODO: Create an array of questions for user input
-const initQuestions = [
+const questions = [
     {
         type: "input",
         name: "title",
@@ -159,31 +159,29 @@ const writeToFile = (fileName, data) => writeFileSync(fileName, data);
 // TODO: Create a function to initialize app
 const init = async () =>
 {
-    let initAnswers;
+    let answers;
     let generateMdConfirmation = false;
 
     while (generateMdConfirmation === false)
     {
-        initAnswers = await inquirer.prompt(initQuestions);
-        generateMdConfirmation = initAnswers.confirm;
+        answers = await inquirer.prompt(questions);
+        generateMdConfirmation = answers.confirm;
     }
 
-    console.log(initAnswers);
-
-    if (existsSync(initAnswers.filePath))
+    if (existsSync(answers.filePath))
     {
-        const filePathLstat = lstatSync(initAnswers.filePath);
+        const filePathLstat = lstatSync(answers.filePath);
 
         if ( ! filePathLstat.isFile())
         {
-            console.log(`Path points to non-file: ${initAnswers.filePath}`);
+            console.log(`Path points to non-file: ${answers.filePath}`);
             process.exit(0);
         }
 
         const confirmOverwritePrompt = {
             type: "confirm",
             name: "overwrite",
-            message: `File "${initAnswers.filePath}" already exists. Overwrite?`,
+            message: `File "${answers.filePath}" already exists. Overwrite?`,
             prefix: PREFIX
         };
 
@@ -191,16 +189,16 @@ const init = async () =>
 
         if (overwriteConfirmation.overwrite === true)
         {
-            writeToFile(initAnswers.filePath, generateMarkdown(initAnswers));
+            writeToFile(answers.filePath, generateMarkdown(answers));
         }
         else
         {
-            console.log(`Not overwriting file: "${initAnswers.filePath}"`);
+            console.log(`Not overwriting file: "${answers.filePath}"`);
         }
     }
     else
     {
-        writeToFile(initAnswers.filePath, generateMarkdown(initAnswers));
+        writeToFile(answers.filePath, generateMarkdown(answers));
     }
 };
 
