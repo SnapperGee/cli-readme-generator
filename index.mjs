@@ -3,7 +3,7 @@ import { licenseValues } from "./utils/license.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import {resolve as resolvePath } from "node:path";
-import { existsSync, lstat, writeFile } from "node:fs";
+import { existsSync, lstat, lstatSync, writeFile } from "node:fs";
 
 const PREFIX = ">>>";
 const BLANK_OMIT_SUFFIX = "(leave blank to omit)";
@@ -75,7 +75,8 @@ const questions = [
         type: "input",
         name: "github",
         message: "Github username:",
-        filter: (input) => new Promise( (resolve) => {
+        filter: (input) => new Promise( (resolve) =>
+        {
             const trimmedInput = input.trim();
 
             if (trimmedInput.length !== 0)
@@ -95,7 +96,8 @@ const questions = [
         name: "email",
         message: "Email:",
         filter: (input) => Promise.resolve(input.trim()),
-        validate: (input) => new Promise( (resolve) => {
+        validate: (input) => new Promise( (resolve) =>
+        {
             // Accept empty input as valid.
             if (input.length === 0) {resolve(true); return; }
 
@@ -127,7 +129,8 @@ const questions = [
         type: "input",
         name: "filePath",
         message: "File name or path:",
-        filter: (input) => new Promise( (resolve) => {
+        filter: (input) => new Promise( (resolve) =>
+        {
             let formattedInput = input.trim();
 
             if (formattedInput.length !== 0)
@@ -142,7 +145,35 @@ const questions = [
 
             resolve(formattedInput);
         }),
-        validate: (input) => Promise.resolve(input.length !== 0 || "A file name or path is required."),
+        validate: (input) => new Promise((resolve, reject) =>
+        {
+            if (input.length === 0)
+            {
+                resolve("A file name or path is required.");
+                return;
+            }
+
+            if (existsSync(input))
+            {
+                lstat(input, (err, stats) =>
+                {
+                    if (err) { reject(err); return; }
+
+                    if ( ! stats.isFile())
+                    {
+                        resolve(`Path points to non-file. Path must point to a file to overwrite or non-existing file to create a new one.`);
+                        return;
+                    }
+
+                    resolve(true);
+                });
+            }
+            else
+            {
+                resolve(true);
+            }
+
+        }),
         prefix: PREFIX
     },
     {
@@ -170,57 +201,11 @@ export const init = async () =>
         answers = await inquirer.prompt(questions);
         generateMdConfirmation = answers.confirm;
     }
+    writeToFile(answers.filePath, generateMarkdown(answers), (err) => {
+        if (err) { throw err; }
 
-    if (existsSync(answers.filePath))
-    {
-        lstat(answers.filePath, (err, stats) =>
-        {
-            if (err) { throw err; }
-
-            if ( ! stats.isFile())
-            {
-                console.error(`\nError: Path points to non-file: ${answers.filePath}`);
-                process.exit(444);
-            }
-        })
-;
-        const confirmOverwritePrompt = {
-            type: "confirm",
-            name: "overwrite",
-            message: `File "${answers.filePath}" already exists. Overwrite?`,
-            prefix: PREFIX
-        };
-
-        const overwriteConfirmation = await inquirer.prompt([confirmOverwritePrompt]);
-
-        if (overwriteConfirmation.overwrite === true)
-        {
-            writeToFile(answers.filePath, generateMarkdown(answers), (err) =>
-            {
-                if (err)
-                {
-                    throw err;
-                }
-
-                console.log(`README generated at: "${answers.filePath}"`);
-            });
-        }
-        else
-        {
-            console.log(`Not overwriting file: "${answers.filePath}"`);
-        }
-    }
-    else
-    {
-        writeToFile(answers.filePath, generateMarkdown(answers), (err) => {
-            if (err)
-            {
-                throw err;
-            }
-
-            console.log(`README generated at: "${answers.filePath}"`);
-        });
-    }
+        console.log(`README generated at: "${answers.filePath}"`);
+    });
 };
 
 // Function call to initialize app
