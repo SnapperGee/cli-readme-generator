@@ -157,7 +157,7 @@ const questions = [
 const writeToFile = async (fileName, data, callback) => writeFile(fileName, data, callback);
 
 // TODO: Create a function to initialize app
-const init = async () =>
+export const init = async () =>
 {
     let answers;
     let generateMdConfirmation = false;
@@ -219,3 +219,5 @@ const init = async () =>
 
 // Function call to initialize app
 init();
+
+export default init;
