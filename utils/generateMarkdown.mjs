@@ -33,7 +33,7 @@ export const generateMarkdown = (data) => {
 
     if (data.contribution)
     {
-        markDownString += `\n\n## Contribution Guidelines\n\n${data.contribution}`;
+        markDownString += `\n\n## Contributing\n\n${data.contribution}`;
     }
 
     if (data.tests)
