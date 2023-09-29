@@ -184,7 +184,7 @@ const questions = [
         prefix: PREFIX
     },
     {
-        // TODO: edit properties if answered negatively
+        // TODO: specify properties to edit if answered negatively
         type: "confirm",
         name: "confirm",
         message: (answers) => {
