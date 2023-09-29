@@ -1,4 +1,3 @@
-// TODO: Include packages needed for this application
 import { licenseValues } from "./utils/license.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
@@ -9,7 +8,6 @@ const PREFIX = ">>>";
 const BLANK_OMIT_SUFFIX = "(leave blank to omit)";
 const VALID_EMAIL_FORMAT_MSG = "Email in the format of username@domain.ext containing no white spaces expected";
 
-// TODO: Create an array of questions for user input
 const questions = [
     {
         type: "input",
@@ -176,6 +174,17 @@ const questions = [
         prefix: PREFIX
     },
     {
+        // TODO: reprompt and overwrite outputFilePath if answered negatively.
+        type: "confirm",
+        name: "overwrite",
+        when: (answers) => existsSync(answers.outputFilePath),
+        message: (answers) => {
+            return `Output file path points to pre-existing file: "${answers.outputFilePath}". Overwrite?`;
+        },
+        prefix: PREFIX
+    },
+    {
+        // TODO: edit properties if answered negatively
         type: "confirm",
         name: "confirm",
         message: (answers) => {
@@ -186,10 +195,8 @@ const questions = [
     }
 ];
 
-// TODO: Create a function to write README file
 const writeToFile = async (fileName, data, callback) => writeFile(fileName, data, callback);
 
-// TODO: Create a function to initialize app
 export const init = async () =>
 {
     let answers;
@@ -203,7 +210,7 @@ export const init = async () =>
     writeToFile(answers.outputFilePath, generateMarkdown(answers), (err) => {
         if (err) { throw err; }
 
-        console.log(`README generated at: "${answers.filePath}"`);
+        console.log(`README generated at: "${answers.outputFilePath}"`);
     });
 };
 
