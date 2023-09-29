@@ -176,7 +176,7 @@ export const init = async () =>
 
             if ( ! stats.isFile())
             {
-                console.log(`Path points to non-file: ${answers.filePath}`);
+                console.error(`\nError: Path points to non-file: ${answers.filePath}`);
                 process.exit(444);
             }
         })
@@ -187,7 +187,6 @@ export const init = async () =>
             message: `File "${answers.filePath}" already exists. Overwrite?`,
             prefix: PREFIX
         };
-
 
         const overwriteConfirmation = await inquirer.prompt([confirmOverwritePrompt]);
 
