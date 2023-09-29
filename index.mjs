@@ -153,7 +153,11 @@ const questions = [
                 return;
             }
 
-            if (existsSync(input))
+            if ( ! existsSync(input))
+            {
+                resolve(true);
+            }
+            else
             {
                 lstat(input, (err, stats) =>
                 {
@@ -168,11 +172,6 @@ const questions = [
                     resolve(true);
                 });
             }
-            else
-            {
-                resolve(true);
-            }
-
         }),
         prefix: PREFIX
     },
