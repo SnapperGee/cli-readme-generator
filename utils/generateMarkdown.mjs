@@ -14,49 +14,52 @@ const renderLicenseSection = (license) => licenseKeys.includes(license) ? `${ren
 
 // TODO: Create a function to generate markdown for README
 export const generateMarkdown = (data) => {
-    let markDownString = `# ${data.title}\n\n${renderLicenseLink(licenseValues.find(licenseValue => licenseValue.name === data.license))}`;
+
+    const markdownLines = [
+        `# ${data.title}\n\n${renderLicenseLink(licenseValues.find(licenseValue => licenseValue.name === data.license))}`
+    ];
 
     if (data.description)
     {
-        markDownString += `\n\n## Description\n\n${data.description}`;
+        markdownLines.push(`\n\n## Description\n\n${data.description}`);
     }
 
     if (data.installation)
     {
-        markDownString += `\n\n## Installation\n\n${data.installation}`;
+        markdownLines.push(`\n\n## Installation\n\n${data.installation}`);
     }
 
     if (data.usage)
     {
-        markDownString += `\n\n## Usage\n\n${data.usage}`;
+        markdownLines.push(`\n\n## Usage\n\n${data.usage}`);
     }
 
     if (data.contribution)
     {
-        markDownString += `\n\n## Contributing\n\n${data.contribution}`;
+        markdownLines.push(`\n\n## Contributing\n\n${data.contribution}`);
     }
 
     if (data.tests)
     {
-        markDownString += `\n\n## Tests\n\n${data.tests}`;
+        markdownLines.push(`\n\n## Tests\n\n${data.tests}`);
     }
 
     if (data.github || data.email)
     {
-        markDownString += "\n\n## Questions\n\nAny questions can be directed to";
+        markdownLines.push("\n\n## Questions\n\nAny questions can be directed to");
 
         if (data.github)
         {
-            markDownString += ` Github [here](${data.github})`;
+            markdownLines.push(` Github [here](${data.github})`);
         }
 
         if (data.email)
         {
-            markDownString += ` ${data.github ? "or ": ""}${data.email}`;
+            markdownLines.push(` ${data.github ? "or ": ""}${data.email}`);
         }
     }
 
-    return markDownString;
+    return markdownLines.join("");
 };
 
 export default generateMarkdown;
