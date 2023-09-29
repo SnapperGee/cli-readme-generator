@@ -3,7 +3,7 @@ import { licenseValues } from "./utils/license.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import {resolve as resolvePath } from "node:path";
-import { existsSync, lstatSync, writeFile } from "node:fs";
+import { existsSync, lstat, writeFile } from "node:fs";
 
 const PREFIX = ">>>";
 const BLANK_OMIT_SUFFIX = "(leave blank to omit)";
@@ -170,20 +170,24 @@ export const init = async () =>
 
     if (existsSync(answers.filePath))
     {
-        const filePathLstat = lstatSync(answers.filePath);
-
-        if ( ! filePathLstat.isFile())
+        lstat(answers.filePath, (err, stats) =>
         {
-            console.log(`Path points to non-file: ${answers.filePath}`);
-            process.exit(0);
-        }
+            if (err) { throw err; }
 
+            if ( ! stats.isFile())
+            {
+                console.log(`Path points to non-file: ${answers.filePath}`);
+                process.exit(444);
+            }
+        })
+;
         const confirmOverwritePrompt = {
             type: "confirm",
             name: "overwrite",
             message: `File "${answers.filePath}" already exists. Overwrite?`,
             prefix: PREFIX
         };
+
 
         const overwriteConfirmation = await inquirer.prompt([confirmOverwritePrompt]);
 
