@@ -94,12 +94,12 @@ const questions = [
         name: "email",
         message: "Email:",
         filter: (input) => new Promise((resolve) => resolve(input.trim())),
-        validate: (input) => {
+        validate: (input) => new Promise( (resolve) => {
             // Accept empty input as valid.
-            if (input.length === 0) { return true; }
+            if (input.length === 0) { return resolve(true); }
 
             // Make sure there's no whitespace
-            if (input.search(/\s/g) !== -1) { return VALID_EMAIL_FORMAT_MSG; }
+            if (input.search(/\s/g) !== -1) { return resolve(VALID_EMAIL_FORMAT_MSG); }
 
             // Count number of @ and period characters
             const charCount = Array.from(input)
@@ -111,11 +111,11 @@ const questions = [
                     {att: 0, period: 0}
                 );
 
-            if (charCount.att !== 1) { return VALID_EMAIL_FORMAT_MSG; }
-            if (charCount.period === 0) { return VALID_EMAIL_FORMAT_MSG; }
+            if (charCount.att !== 1) { return resolve(VALID_EMAIL_FORMAT_MSG); }
+            if (charCount.period === 0) { return resolve(VALID_EMAIL_FORMAT_MSG); }
 
-            return true;
-        },
+            return resolve(true);
+        }),
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
     },
@@ -123,7 +123,7 @@ const questions = [
         type: "input",
         name: "filePath",
         message: "File name or path:",
-        filter: (input) => {
+        filter: (input) => new Promise( (resolve) => {
             let formattedInput = input.trim();
 
             if (formattedInput.length !== 0)
@@ -136,20 +136,19 @@ const questions = [
                 formattedInput = resolvePath(formattedInput);
             }
 
-            return formattedInput;
-        },
-        validate: (input) => input.length !== 0 || "A file name or path is required.",
+            return resolve(formattedInput);
+        }),
+        validate: (input) => new Promise((resolve) => resolve(input.length !== 0 || "A file name or path is required.")),
         prefix: PREFIX
     },
     {
         type: "confirm",
         name: "confirm",
         message: (answers) => {
-            const answersString = JSON.stringify(answers, undefined, 1);
-            const formattedAnswersString = answersString.substring(1, answersString.length - 1);
-            return `${(formattedAnswersString)}\nCreate markdown with the above properties?`;
+            const answersString = Object.entries(answers).filter(entry => entry[1].length !== 0).map(entry => `${entry[0]}: "${entry[1]}"`).join("\n");
+            return `\n${(answersString)}\n\nCreate markdown with the above properties?`;
         },
-        prefix: PREFIX
+        prefix: ""
     }
 ];
 
