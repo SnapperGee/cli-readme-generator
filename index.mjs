@@ -75,16 +75,16 @@ const questions = [
         type: "input",
         name: "github",
         message: "Github username:",
-        filter: (input) => {
+        filter: (input) => new Promise( (resolve) => {
             const trimmedInput = input.trim();
 
             if (trimmedInput.length !== 0)
             {
-                return `https://github.com/${trimmedInput}`;
+                return resolve(`https://github.com/${trimmedInput}`);
             }
 
-            return trimmedInput;
-        },
+            return resolve(trimmedInput);
+        }),
         default: "",
         prefix: PREFIX,
         suffix: BLANK_OMIT_SUFFIX
