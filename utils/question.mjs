@@ -198,6 +198,7 @@ export const overwriteQuestion = Object.freeze({
     // TODO: specify properties to edit if answered negatively
     type: "confirm",
     name: "confirm",
+    when: (answers) => Promise.resolve(answers.overwrite === undefined || answers.overwrite === true),
     message: (answers) => {
         const answersString = Object.entries(answers).filter(entry => entry[1].length !== 0).map(entry => `${entry[0]}: "${entry[1]}"`).join("\n");
         return `\n${(answersString)}\n\nCreate markdown with the above properties?`;
