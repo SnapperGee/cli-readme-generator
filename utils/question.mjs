@@ -3,22 +3,24 @@ import { resolve as resolvePath } from "node:path";
 import { existsSync, lstat } from "node:fs";
 
 const PREFIX = ">>>";
-const BLANK_OMIT_SUFFIX = "(leave blank to omit)";
+const SUFFIX = ":";
+const BLANK_OMIT_SUFFIX = "(leave blank to omit):";
 const VALID_EMAIL_FORMAT_MSG = "Email in the format of username@domain.ext containing no white spaces expected";
 
 export const titleQuestion = Object.freeze({
     type: "input",
     name: "title",
-    message: "Title:",
+    message: "Title",
     filter: (input) => Promise.resolve(input.trim()),
     validate: (input) => Promise.resolve(input.length !== 0 || "A non-blank title is required."),
-    prefix: PREFIX
+    prefix: PREFIX,
+    suffix: SUFFIX
 });
 
 export const descriptionQuestion =Object.freeze({
     type: "input",
     name: "description",
-    message: "Description:",
+    message: "Description",
     filter: (input) => Promise.resolve(input.trim()),
     default: "",
     prefix: PREFIX,
@@ -28,7 +30,7 @@ export const descriptionQuestion =Object.freeze({
 export const installationQuestion = Object.freeze({
     type: "input",
     name: "installation",
-    message: "Installation:",
+    message: "Installation",
     filter: (input) => Promise.resolve(input.trim()),
     default: "",
     prefix: PREFIX,
@@ -38,7 +40,7 @@ export const installationQuestion = Object.freeze({
 export const usageQuestion = Object.freeze({
     type: "input",
     name: "usage",
-    message: "Usage:",
+    message: "Usage",
     filter: (input) => Promise.resolve(input.trim()),
     default: "",
     prefix: PREFIX,
@@ -48,7 +50,7 @@ export const usageQuestion = Object.freeze({
 export const contributionQuestion = Object.freeze({
     type: "input",
     name: "contribution",
-    message: "Contribution:",
+    message: "Contribution",
     filter: (input) => Promise.resolve(input.trim()),
     default: "",
     prefix: PREFIX,
@@ -58,7 +60,7 @@ export const contributionQuestion = Object.freeze({
 export const testsQuestion = Object.freeze({
     type: "input",
     name: "tests",
-    message: "Tests:",
+    message: "Tests",
     filter: (input) => Promise.resolve(input.trim()),
     default: "",
     prefix: PREFIX,
@@ -68,15 +70,16 @@ export const testsQuestion = Object.freeze({
 export const licenseQuestion = Object.freeze({
     type: "list",
     name: "license",
-    message: "License:",
+    message: "License",
     choices: licenseValues.map(licenseValue => licenseValue.name),
-    prefix: PREFIX
+    prefix: PREFIX,
+    suffix: SUFFIX
 });
 
 export const githubQuestion = Object.freeze({
     type: "input",
     name: "github",
-    message: "Github username:",
+    message: "Github username",
     filter: (input) => new Promise( (resolve) =>
     {
         const trimmedInput = input.trim();
@@ -97,7 +100,7 @@ export const githubQuestion = Object.freeze({
 export const emailQuestion = Object.freeze({
     type: "input",
     name: "email",
-    message: "Email:",
+    message: "Email",
     filter: (input) => Promise.resolve(input.trim()),
     validate: (input) => new Promise( (resolve) =>
     {
@@ -132,7 +135,7 @@ export const emailQuestion = Object.freeze({
 export const outputFilepathQuestion = Object.freeze({
     type: "input",
     name: "outputFilepath",
-    message: "File name or path:",
+    message: "File name or path",
     filter: (input) => new Promise( (resolve) =>
     {
         let formattedInput = input.trim();
@@ -177,7 +180,8 @@ export const outputFilepathQuestion = Object.freeze({
             });
         }
     }),
-    prefix: PREFIX
+    prefix: PREFIX,
+    suffix: SUFFIX
  });
 
 export const overwriteQuestion = Object.freeze({
@@ -188,7 +192,8 @@ export const overwriteQuestion = Object.freeze({
     message: (answers) => {
         return `Output file path points to pre-existing file: "${answers.outputFilePath}". Overwrite?`;
     },
-    prefix: PREFIX
+    prefix: PREFIX,
+    suffix: SUFFIX
  });
 
  export const confirmQuestion = Object.freeze({
@@ -199,7 +204,8 @@ export const overwriteQuestion = Object.freeze({
         const answersString = Object.entries(answers).filter(entry => entry[1].length !== 0).map(entry => `${entry[0]}: "${entry[1]}"`).join("\n");
         return `\n${(answersString)}\n\nCreate markdown with the above properties?`;
     },
-    prefix: ""
+    prefix: "",
+    suffix: SUFFIX
  });
 
 export const question = Object.freeze({
