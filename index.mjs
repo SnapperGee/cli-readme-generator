@@ -9,24 +9,45 @@ const writeToFile = async (fileName, data, callback) => writeFile(fileName, data
 
 export const init = async () =>
 {
-    inquirer.prompt(questions).then( (answers) =>
+    let answers = await inquirer.prompt(questions);
+
+    while (answers.overwrite === false)
     {
-        if (answers.overwrite === false)
-        {
-            console.log(`Overwrite of "${answers.outputFilepath}" rejected. Aborting...`);
-        }
-        else if (answers.confirm === true)
-        {
-            writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
-                if (err) { throw err; }
-                console.log(`README generated at: "${answers.outputFilepath}"`);
-            });
-        }
-        else
-        {
-            console.log(`Generation of "${answers.outputFilepath}" rejected. Aborting...`);
-        }
-    });
+        delete answers.outputFilepath;
+        delete answers.overwrite;
+        answers = await inquirer.prompt([question.outputFilepath, question.overwrite, question.confirm], answers);
+    }
+
+    if (answers.confirm === true)
+    {
+        writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
+            if (err) { throw err; }
+            console.log(`README generated at: "${answers.outputFilepath}"`);
+        });
+    }
+    else
+    {
+        console.log(`Generation of "${answers.outputFilepath}" rejected. Aborting...`);
+    }
+
+    // inquirer.prompt(questions).then( (answers) =>
+    // {
+    //     if (answers.overwrite === false)
+    //     {
+    //         console.log(`Overwrite of "${answers.outputFilepath}" rejected. Aborting...`);
+    //     }
+    //     else if (answers.confirm === true)
+    //     {
+    //         writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
+    //             if (err) { throw err; }
+    //             console.log(`README generated at: "${answers.outputFilepath}"`);
+    //         });
+    //     }
+    //     else
+    //     {
+    //         console.log(`Generation of "${answers.outputFilepath}" rejected. Aborting...`);
+    //     }
+    // });
 };
 
 init();
