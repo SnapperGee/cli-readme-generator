@@ -9,21 +9,26 @@ const writeToFile = async (fileName, data, callback) => writeFile(fileName, data
 
 export const init = async () =>
 {
-    let answers;
-    let generateMdConfirmation = false;
-
-    while (generateMdConfirmation === false)
+    inquirer.prompt(questions).then( (answers) =>
     {
-        answers = await inquirer.prompt(questions);
-        generateMdConfirmation = answers.confirm;
-    }
-    writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
-        if (err) { throw err; }
-        console.log(`README generated at: "${answers.outputFilepath}"`);
+        if (answers.overwrite === false)
+        {
+            console.log(`Overwrite of "${answers.outputFilepath}" rejected. Aborting...`);
+        }
+        else if (answers.confirm === true)
+        {
+            writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
+                if (err) { throw err; }
+                console.log(`README generated at: "${answers.outputFilepath}"`);
+            });
+        }
+        else
+        {
+            console.log(`Generation of "${answers.outputFilepath}" rejected. Aborting...`);
+        }
     });
 };
 
-// Function call to initialize app
 init();
 
 export default init;
