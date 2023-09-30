@@ -7,6 +7,8 @@ const questions = Object.values(question);
 
 const writeToFile = async (fileName, data, callback) => writeFile(fileName, data, callback);
 
+const outputFilepathOverwriteConfirmQuestions = Object.freeze([question.outputFilepath, question.overwrite, question.confirm]);
+
 export const init = () =>
 {
     inquirer.prompt(questions).then( async (answers) =>
@@ -15,7 +17,7 @@ export const init = () =>
         {
             delete answers.outputFilepath;
             delete answers.overwrite;
-            answers = await inquirer.prompt([question.outputFilepath, question.overwrite, question.confirm], answers);
+            answers = await inquirer.prompt(outputFilepathOverwriteConfirmQuestions, answers);
         }
 
         if (answers.confirm === true)
