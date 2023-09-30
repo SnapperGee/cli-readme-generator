@@ -188,7 +188,7 @@ export const overwriteQuestion = Object.freeze({
     // TODO: reprompt and overwrite outputFilePath if answered negatively.
     type: "confirm",
     name: "overwrite",
-    when: (answers) => existsSync(answers.outputFilepath),
+    when: (answers) => Promise.resolve(existsSync(answers.outputFilepath)),
     message: (answers) => `Output file path points to pre-existing file: "${answers.outputFilepath}". Overwrite?`,
     prefix: PREFIX,
     suffix: SUFFIX
