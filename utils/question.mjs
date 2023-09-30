@@ -189,9 +189,7 @@ export const overwriteQuestion = Object.freeze({
     type: "confirm",
     name: "overwrite",
     when: (answers) => existsSync(answers.outputFilepath),
-    message: (answers) => {
-        return `Output file path points to pre-existing file: "${answers.outputFilepath}". Overwrite?`;
-    },
+    message: (answers) => `Output file path points to pre-existing file: "${answers.outputFilepath}". Overwrite?`,
     prefix: PREFIX,
     suffix: SUFFIX
  });
