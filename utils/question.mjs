@@ -206,6 +206,8 @@ export const overwriteQuestion = Object.freeze({
     suffix: SUFFIX
  });
 
+ export const overwriteQuestions = Object.freeze([outputFilepathQuestion, overwriteQuestion, confirmQuestion]);
+
 export const question = Object.freeze({
     title: titleQuestion,
     description: descriptionQuestion,
