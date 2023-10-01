@@ -7,6 +7,8 @@ const SUFFIX = ":";
 const BLANK_OMIT_SUFFIX = "(leave blank to omit):";
 const VALID_EMAIL_FORMAT_MSG = "Email in the format of username@domain.ext containing no white spaces expected";
 
+const toString = (arg) => typeof arg === "string" ? `"${arg}"` : arg;
+
 export const titleQuestion = Object.freeze({
     type: "input",
     name: "title",
@@ -199,7 +201,7 @@ export const overwriteQuestion = Object.freeze({
     name: "confirm",
     when: (answers) => Promise.resolve(answers.overwrite === undefined || answers.overwrite === true),
     message: (answers) => {
-        const answersString = Object.entries(answers).filter(entry => entry[1].length !== 0).map(entry => `${entry[0]}: "${entry[1]}"`).join("\n");
+        const answersString = Object.entries(answers).filter(entry => entry[1].length !== 0).map(entry => `${entry[0]}: (${toString(entry[1])})`).join("\n");
         return `\n${(answersString)}\n\nCreate markdown with the above properties?`;
     },
     prefix: "",
@@ -221,6 +223,20 @@ export const question = Object.freeze({
     outputFilepath: outputFilepathQuestion,
     overwrite: overwriteQuestion,
     confirm: confirmQuestion
+});
+
+export const editAnswersQuestion = Object.freeze({
+    type: "checkbox",
+    name: "editAnswers",
+    message: "Choose properties to edit",
+    choices: (answers) => Promise.resolve(
+        Object.entries(answers).map( (answerEntry) => ({
+            name: `${answerEntry[0]}: ${toString(answerEntry[1])}`,
+            value: answerEntry[0]
+        }))
+    ),
+    prefix: PREFIX,
+    suffix: SUFFIX
 });
 
 export default question;
