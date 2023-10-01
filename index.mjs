@@ -1,4 +1,4 @@
-import { question, overwriteQuestions } from "./utils/question.mjs";
+import { question, overwriteQuestions, editAnswersQuestion } from "./utils/question.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import { writeFile } from "node:fs";
@@ -13,7 +13,7 @@ export const init = () =>
     {
         while (answers.overwrite === false)
         {
-            await inquirer.prompt(overwriteQuestions).then(overwriteAnswers =>
+            await inquirer.prompt(overwriteQuestions).then( (overwriteAnswers) =>
             {
                 answers.outputFilepath = overwriteAnswers.outputFilepath;
                 answers.overwrite = overwriteAnswers.overwrite;
@@ -21,17 +21,29 @@ export const init = () =>
             });
         }
 
-        if (answers.confirm === true)
+        while (answers.confirm === false)
         {
-            writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
-                if (err) { throw err; }
-                console.log(`README generated at: "${answers.outputFilepath}"`);
+            delete answers.confirm;
+
+            await inquirer.prompt(editAnswersQuestion, answers).then( async (answersToEdit) =>
+            {
+                await inquirer.prompt(questions.filter(question => answersToEdit.editAnswers.includes(question.name))).then( (newAnswers) =>
+                {
+                    for (const newAnswer of Object.entries(newAnswers))
+                    {
+                        answers[newAnswer[0]] = newAnswer[1];
+                    }
+
+                });
+
+                answers = await inquirer.prompt(question.confirm, answers);
             });
         }
-        else
-        {
-            console.log(`Generation of "${answers.outputFilepath}" rejected. Aborting...`);
-        }
+
+        writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
+            if (err) { throw err; }
+            console.log(`README generated at: "${answers.outputFilepath}"`);
+        });
     });
 };
 
