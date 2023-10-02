@@ -1,18 +1,11 @@
-import { license as definedLicense, licenseKeys, licenseValues } from "./license.mjs";
+import { licenseValues } from "./license.mjs";
 
-// TODO: Create a function that returns a license badge based on which license is passed in
-// If there is no license, return an empty string
-export const renderLicenseBadge = (license) => license ? `![${license.name}](${license.shieldLink})` : "";
+const renderLicenseBadge = (license) => license ? `![${license.name}](${license.shieldLink})` : "";
 
-// TODO: Create a function that returns the license link
-// If there is no license, return an empty string
 const renderLicenseLink = (license) => license ? `[${renderLicenseBadge(license)}](${license.clauseLink})` : "";
 
-// TODO: Create a function that returns the license section of README
-// If there is no license, return an empty string
 const renderLicenseSection = (license) => license ? ["1. [License](#license)", `\n\n## License\n\n### ${license.name}`] : "";
 
-// TODO: Create a function to generate markdown for README
 export const generateMarkdown = (data) => {
 
     const markdownLines = [
