@@ -1,7 +1,11 @@
-import { question, overwriteQuestions, editAnswersQuestion } from "./utils/question.mjs";
+import { question, editAnswersQuestion } from "./utils/question.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import { writeFile } from "node:fs";
+
+const OUTPUT_FILEPATH_OVERWRITE = Object.freeze([question.outputFilepath, question.overwrite]);
+
+const OUTPUT_FILEPATH_OVERWRITE_CONFIRM = Object.freeze([...OUTPUT_FILEPATH_OVERWRITE, question.confirm]);
 
 const questions = Object.values(question);
 
@@ -16,7 +20,7 @@ export const init = async () =>
         delete answers.outputFilepath;
         delete answers.overwrite;
 
-        answers = await inquirer.prompt(overwriteQuestions, answers);
+        answers = await inquirer.prompt(OUTPUT_FILEPATH_OVERWRITE_CONFIRM, answers);
     }
 
     while(answers.confirm === false)
@@ -50,7 +54,7 @@ export const init = async () =>
                 delete newAnswers.outputFilepath;
                 delete newAnswers.overwrite;
 
-                newAnswers = await inquirer.prompt([question.outputFilepath, question.overwrite], newAnswers);
+                newAnswers = await inquirer.prompt(OUTPUT_FILEPATH_OVERWRITE, newAnswers);
             }
 
             for (const newAnswerKey in newAnswers)
