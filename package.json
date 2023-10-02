@@ -5,6 +5,9 @@
   "description": "Generate a readme file via an interactive CLI.",
   "main": "index.mjs",
   "type": "module",
+  "engines": {
+    "node": ">16"
+  },
   "scripts": {
     "exec": "node ./index.mjs"
   },
