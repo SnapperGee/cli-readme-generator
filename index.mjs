@@ -9,47 +9,58 @@ const writeToFile = async (fileName, data, callback) => writeFile(fileName, data
 
 export const init = async () =>
 {
-    let answers = await inquirer.prompt(questions).then( async (initAnswers) =>
+    let answers = await inquirer.prompt(questions);
+
+    while(answers.overwrite === false)
     {
-        while(initAnswers.overwrite === false)
-        {
-            delete initAnswers.outputFilepath;
-            delete initAnswers.overwrite;
+        delete answers.outputFilepath;
+        delete answers.overwrite;
 
-            initAnswers = await inquirer.prompt([question.outputFilepath, question.overwrite], initAnswers);
-        }
-
-        return initAnswers;
-    });
+        answers = await inquirer.prompt(overwriteQuestions, answers);
+    }
 
     while(answers.confirm === false)
     {
         delete answers.confirm;
 
-        const answersToEdit = await inquirer.prompt(editAnswersQuestion, answers).then(anwersWithAnswersToEdit => anwersWithAnswersToEdit.answersToEdit);
+        const answersToEdit = await inquirer.prompt(editAnswersQuestion, answers).then(answersWithAnswersToEdit => answersWithAnswersToEdit.answersToEdit);
 
-        console.log(`\n\n\n${Object.entries(answersToEdit)}\n\n\n`);
-
-        if (answersToEdit.includes(question.outputFilepath) || answersToEdit.includes(question.overwrite))
+        if (answersToEdit.some(answerToEdit => answerToEdit === question.outputFilepath.name || answerToEdit === question.overwrite.name))
         {
             delete answers.outputFilepath;
             delete answers.overwrite;
 
-            answers = await inquirer.prompt([question.outputFilepath, question.overwrite], answers);
+            if(answersToEdit.includes(question.outputFilepath.name) && ! answersToEdit.includes(question.overwrite.name))
+            {
+                answersToEdit.splice(answersToEdit.indexOf(question.outputFilepath.name) + 1, 0, question.overwrite.name);
+            }
+
+            if(answersToEdit.includes(question.overwrite.name) && ! answersToEdit.includes(question.outputFilepath.name))
+            {
+                answersToEdit.splice(answersToEdit.indexOf(question.overwrite.name), 0, question.outputFilepath.name);
+            }
         }
 
         if (answersToEdit.length !== 0)
         {
-            const newAnswers = await inquirer.prompt(answersToEdit.map(answerToEdit => questions.find(question => answerToEdit === question.name))).catch(err => {throw new err});
+            let newAnswers = await inquirer.prompt(answersToEdit.map(answerToEdit => questions.find(question => answerToEdit === question.name))).catch(err => {throw new err});
 
-            for (const newAnswer in newAnswers)
+            while(newAnswers.overwrite === false)
             {
-                answers[newAnswer] = newAnswers[newAnswer];
+                delete newAnswers.outputFilepath;
+                delete newAnswers.overwrite;
+
+                newAnswers = await inquirer.prompt([question.outputFilepath, question.overwrite], newAnswers);
+            }
+
+            for (const newAnswerKey in newAnswers)
+            {
+                const newAnswer = newAnswers[newAnswerKey];
+                answers[newAnswerKey] = newAnswer;
             }
         }
 
         answers = await inquirer.prompt(question.confirm, answers);
-
     }
 
     writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
