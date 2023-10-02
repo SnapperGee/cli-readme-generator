@@ -1,3 +1,8 @@
+/**
+ * Module containing questions to pass to `inquirer`'s `prompt` function.
+ * @module question
+ */
+
 import { licenseValues } from "./license.mjs";
 import { resolve as resolvePath } from "node:path";
 import { existsSync, lstat } from "node:fs";
@@ -9,6 +14,10 @@ const VALID_EMAIL_FORMAT_MSG = "Email in the format of username@domain.ext conta
 
 const toString = (arg) => typeof arg === "string" ? `"${arg}"` : arg;
 
+/**
+ * `inquirer.prompt` question to set the ***Title*** of the generated markdown file to insert as the h1 element at the
+ * top of the page. A non-blank string is required and any leading and trailing white space is removed.
+ */
 export const titleQuestion = Object.freeze({
     type: "input",
     name: "title",
@@ -19,6 +28,10 @@ export const titleQuestion = Object.freeze({
     suffix: SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to set the ***Description*** section content of the generated markdown file. Answering
+ * this question is optional and any leading and trailing whitespace is removed.
+ */
 export const descriptionQuestion =Object.freeze({
     type: "input",
     name: "description",
@@ -29,6 +42,10 @@ export const descriptionQuestion =Object.freeze({
     suffix: BLANK_OMIT_SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to set the ***Installation*** section content of the generated markdown file. Answering
+ * this question is optional and any leading and trailing whitespace is removed.
+ */
 export const installationQuestion = Object.freeze({
     type: "input",
     name: "installation",
@@ -39,6 +56,10 @@ export const installationQuestion = Object.freeze({
     suffix: BLANK_OMIT_SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to set the ***Usage*** section content of the generated markdown file. Answering this
+ * question is optional and any leading and trailing whitespace is removed.
+ */
 export const usageQuestion = Object.freeze({
     type: "input",
     name: "usage",
@@ -49,6 +70,10 @@ export const usageQuestion = Object.freeze({
     suffix: BLANK_OMIT_SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to set the ***Contribution*** section content of the generated markdown file. Answering
+ * this question is optional and any leading and trailing whitespace is removed.
+ */
 export const contributionQuestion = Object.freeze({
     type: "input",
     name: "contribution",
@@ -59,6 +84,10 @@ export const contributionQuestion = Object.freeze({
     suffix: BLANK_OMIT_SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to set the ***Tests*** section content of the generated markdown file. Answering this
+ * question is optional and any leading and trailing whitespace is removed.
+ */
 export const testsQuestion = Object.freeze({
     type: "input",
     name: "tests",
@@ -69,6 +98,10 @@ export const testsQuestion = Object.freeze({
     suffix: BLANK_OMIT_SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to set the ***License*** section content of the generated markdown file. Answering this
+ * question is optional and any leading and trailing whitespace is removed.
+ */
 export const licenseQuestion = Object.freeze({
     type: "list",
     name: "license",
@@ -78,6 +111,10 @@ export const licenseQuestion = Object.freeze({
     suffix: SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to use as the **Github URL contact** in the ***Questions*** section content of the
+ * generated markdown file. Answering this question is optional and any leading and trailing whitespace is removed.
+ */
 export const githubQuestion = Object.freeze({
     type: "input",
     name: "github",
@@ -99,6 +136,11 @@ export const githubQuestion = Object.freeze({
     suffix: BLANK_OMIT_SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to use as the **email contact** in the ***Questions*** section content of the
+ * generated markdown file. Answering this question is optional and any input is checked to not contain any whitespace
+ * and at least 1 period, `'.'`, character and 1 att, `'@'`, character. Any leading and trailing whitespace is removed.
+ */
 export const emailQuestion = Object.freeze({
     type: "input",
     name: "email",
@@ -134,6 +176,11 @@ export const emailQuestion = Object.freeze({
     suffix: BLANK_OMIT_SUFFIX
 });
 
+/**
+ * `inquirer.prompt` question to set the output file path of the generated markdown file. The input has `".md"` appended
+ * to it if it doesn't already end with it and is then passed to {@link resolvePath path.resolve}. A non empty string
+ * that results in a path pointing to a file or doesn't exit yet is required.
+ */
 export const outputFilepathQuestion = Object.freeze({
     type: "input",
     name: "outputFilepath",
@@ -186,6 +233,10 @@ export const outputFilepathQuestion = Object.freeze({
     suffix: SUFFIX
  });
 
+ /**
+  * `inquirer.prompt` question to confirm overwriting the file the {@link outputFilepathQuestion} points to (if
+  * applicable).
+  */
 export const overwriteQuestion = Object.freeze({
     type: "confirm",
     name: "overwrite",
@@ -195,6 +246,9 @@ export const overwriteQuestion = Object.freeze({
     suffix: SUFFIX
  });
 
+ /**
+  * `inquirer.prompt` question to confirm the values all answered prompt questions.
+  */
  export const confirmQuestion = Object.freeze({
     type: "confirm",
     name: "confirm",
@@ -207,6 +261,9 @@ export const overwriteQuestion = Object.freeze({
     suffix: SUFFIX
  });
 
+ /**
+  * An object containing all questions of the {@link question} module ***except the {@link editAnswersQuestion}***.
+  */
 export const question = Object.freeze({
     title: titleQuestion,
     description: descriptionQuestion,
@@ -222,8 +279,14 @@ export const question = Object.freeze({
     confirm: confirmQuestion
 });
 
+/**
+ * A frozen array of all the values of the {@link question} object.
+ */
 export const allQuestions = Object.freeze(Object.values(question));
 
+/**
+ * `inquirer.prompt` question to select which prompt answers to edit.
+ */
 export const editAnswersQuestion = Object.freeze({
     type: "checkbox",
     name: "answersToEdit",
