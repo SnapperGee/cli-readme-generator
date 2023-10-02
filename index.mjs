@@ -11,7 +11,7 @@ export const init = async () =>
 {
     let answers = await inquirer.prompt(questions);
 
-    while(answers.confirm !== true)
+    while(answers.confirm === false)
     {
         delete answers.confirm;
 
@@ -23,58 +23,25 @@ export const init = async () =>
             answers = await inquirer.prompt(overwriteQuestions, answers);
         }
 
-        await inquirer.prompt(editAnswersQuestion, answers).then( async (answersToEdit) =>
+        const answersToEdit = await inquirer.prompt(editAnswersQuestion, answers);//.then( async (answersToEdit) =>
+
+        const newAnswers = await inquirer.prompt(answersToEdit.editAnswers.map(answerToEdit => questions.find(question => answerToEdit === question.name))).catch(err => {throw new err});
+
+        console.log(newAnswers);
+
+        for (const newAnswer in newAnswers)
         {
-            await inquirer.prompt(questions.filter(question => answersToEdit.editAnswers.name === question.name)).then( (newAnswers) =>
-            {
-                for (const newAnswer of Object.values(newAnswers))
-                {
-                    answers[newAnswer.name] = newAnswer;
-                }
-            });
-        });
+            answers[newAnswer] = newAnswers[newAnswer];
+        }
 
         answers = await inquirer.prompt(question.confirm, answers);
+
     }
 
     writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
         if (err) { throw err; }
         console.log(`README generated at: "${answers.outputFilepath}"`);
     });
-
-    // inquirer.prompt(questions).then( async (answers) =>
-    // {
-    //     while (answers.overwrite === false)
-    //     {
-    //         await inquirer.prompt(overwriteQuestions).then( (overwriteAnswers) =>
-    //         {
-    //             answers.outputFilepath = overwriteAnswers.outputFilepath;
-    //             answers.overwrite = overwriteAnswers.overwrite;
-    //             answers.confirm = overwriteAnswers.confirm;
-    //         });
-
-    //         while (answers.confirm === false)
-    //         {
-    //             delete answers.confirm;
-
-    //             await inquirer.prompt(editAnswersQuestion, answers).then( async (answersToEdit) =>
-    //             {
-    //                 await inquirer.prompt(questions.filter(question => answersToEdit.editAnswers.includes(question.name))).then( (newAnswers) =>
-    //                 {
-    //                     for (const newAnswer of Object.entries(newAnswers))
-    //                     {
-    //                         answers[newAnswer[0]] = newAnswer[1];
-    //                     }
-    //                 });
-    //             });
-    //         }
-    //     }
-
-    //     writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
-    //         if (err) { throw err; }
-    //         console.log(`README generated at: "${answers.outputFilepath}"`);
-    //     });
-    // });
 };
 
 init();
