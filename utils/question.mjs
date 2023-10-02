@@ -196,7 +196,6 @@ export const overwriteQuestion = Object.freeze({
  });
 
  export const confirmQuestion = Object.freeze({
-    // TODO: specify properties to edit if answered negatively
     type: "confirm",
     name: "confirm",
     when: (answers) => Promise.resolve(answers.overwrite === undefined || answers.overwrite === true),
