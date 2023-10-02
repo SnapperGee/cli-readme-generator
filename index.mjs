@@ -20,14 +20,16 @@ export const init = async () =>
         delete answers.outputFilepath;
         delete answers.overwrite;
 
-        answers = await inquirer.prompt(OUTPUT_FILEPATH_OVERWRITE_CONFIRM, answers);
+        answers = await inquirer.prompt(OUTPUT_FILEPATH_OVERWRITE_CONFIRM, answers).catch(err => {throw err;});
     }
 
     while(answers.confirm === false)
     {
         delete answers.confirm;
 
-        const answersToEdit = await inquirer.prompt(editAnswersQuestion, answers).then(answersWithAnswersToEdit => answersWithAnswersToEdit.answersToEdit);
+        const answersToEdit = await inquirer.prompt(editAnswersQuestion, answers)
+            .then(answersWithAnswersToEdit => answersWithAnswersToEdit.answersToEdit)
+            .catch(err => {throw err;});
 
         if (answersToEdit.some(answerToEdit => answerToEdit === question.outputFilepath.name || answerToEdit === question.overwrite.name))
         {
@@ -47,14 +49,14 @@ export const init = async () =>
 
         if (answersToEdit.length !== 0)
         {
-            let newAnswers = await inquirer.prompt(answersToEdit.map(answerToEdit => questions.find(question => answerToEdit === question.name))).catch(err => {throw new err});
+            let newAnswers = await inquirer.prompt(answersToEdit.map(answerToEdit => questions.find(question => answerToEdit === question.name))).catch(err => {throw err});
 
             while(newAnswers.overwrite === false)
             {
                 delete newAnswers.outputFilepath;
                 delete newAnswers.overwrite;
 
-                newAnswers = await inquirer.prompt(OUTPUT_FILEPATH_OVERWRITE, newAnswers);
+                newAnswers = await inquirer.prompt(OUTPUT_FILEPATH_OVERWRITE, newAnswers).catch(err => {throw err;});
             }
 
             for (const newAnswerKey in newAnswers)
@@ -64,7 +66,7 @@ export const init = async () =>
             }
         }
 
-        answers = await inquirer.prompt(question.confirm, answers);
+        answers = await inquirer.prompt(question.confirm, answers).catch(err => {throw err;});
     }
 
     writeToFile(answers.outputFilepath, generateMarkdown(answers), (err) => {
