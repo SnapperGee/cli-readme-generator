@@ -226,8 +226,9 @@ export const question = Object.freeze({
 
 export const editAnswersQuestion = Object.freeze({
     type: "checkbox",
-    name: "editAnswers",
+    name: "answersToEdit",
     message: "Choose properties to edit",
+    when: (answers) => Promise.resolve(answers.confirm !== true),
     choices: (answers) => Promise.resolve(
         Object.entries(answers).map( (answerEntry) => ({
             name: `${answerEntry[0]}: ${toString(answerEntry[1])}`,
