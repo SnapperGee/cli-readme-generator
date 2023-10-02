@@ -1,3 +1,8 @@
+/**
+ * Module that contains various functions used for generating the string content inserted into the generated markdown file.
+ * @module generate-markdown
+ */
+
 import { licenseValues } from "./license.mjs";
 
 const renderLicenseBadge = (license) => license ? `![${license.name}](${license.shieldLink})` : "";
@@ -6,12 +11,22 @@ const renderLicenseLink = (license) => license ? `[${renderLicenseBadge(license)
 
 const renderLicenseSection = (license) => license ? ["1. [License](#license)", `\n\n## License\n\n### ${license.name}`] : "";
 
+/**
+ * Function that takes the answer data derived from the `inquirer.prompt` questions from the {@link question} module.
+ *
+ * @param {*} data The answers returned from `inquirer.prompt` derived from the prompt questions from the
+ * {@link question} module.
+ *
+ * @returns the `string` written to the generated markdown file.
+ */
 export const generateMarkdown = (data) => {
 
+    // Array of lines to join and return at end of function
     const markdownLines = [
         `# ${data.title}\n\n${renderLicenseLink(licenseValues.find(licenseValue => licenseValue.name === data.license))}`
     ];
 
+    // Array of lines to join to create the table of contents section
     const tableOfContentsLines = [
         "\n\n## Table of contents\n"
     ];
