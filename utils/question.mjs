@@ -179,7 +179,7 @@ export const emailQuestion = Object.freeze({
 /**
  * `inquirer.prompt` question to set the output file path of the generated markdown file. The input has `".md"` appended
  * to it if it doesn't already end with it and is then passed to {@link resolvePath path.resolve}. A non empty string
- * that results in a path pointing to a file or doesn't exit yet is required.
+ * that results in a path pointing to a file or doesn't exit is required.
  */
 export const outputFilepathQuestion = Object.freeze({
     type: "input",
