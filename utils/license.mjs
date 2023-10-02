@@ -1,3 +1,10 @@
+/**
+ * Module containing info for the various licenses that exits. This includes links to the shield/button images and the
+ * clauses of each license.
+ *
+ * @module license
+ */
+
 const licenseUrlRoot = Object.freeze({
     shieldImg: "https://img.shields.io/badge/",
     buttonImg: "https://licensebuttons.net/l/",
@@ -7,6 +14,9 @@ const licenseUrlRoot = Object.freeze({
     openDataCommonsClause: "https://opendatacommons.org/licenses/"
 });
 
+/**
+ * Contains the names and links to the shield/button images and clauses of various licenses.
+ */
 export const license = Object.freeze({
     apache: Object.freeze({
         name: "Apache 2.0 License",
@@ -208,7 +218,9 @@ export const license = Object.freeze({
     })
 });
 
-export const licenseKeys = Object.freeze(Object.keys(license));
+/**
+ * An array of all the values of the {@link license} object.
+ */
 export const licenseValues = Object.freeze(Object.values(license));
 
 export default license;
