@@ -222,6 +222,8 @@ export const question = Object.freeze({
     confirm: confirmQuestion
 });
 
+export const allQuestions = Object.freeze(Object.values(question));
+
 export const editAnswersQuestion = Object.freeze({
     type: "checkbox",
     name: "answersToEdit",

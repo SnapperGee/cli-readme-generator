@@ -1,4 +1,4 @@
-import { question, editAnswersQuestion } from "./utils/question.mjs";
+import { question, allQuestions, editAnswersQuestion } from "./utils/question.mjs";
 import { generateMarkdown } from "./utils/generateMarkdown.mjs";
 import inquirer from "inquirer";
 import { writeFile } from "node:fs";
@@ -7,7 +7,7 @@ const OUTPUT_FILEPATH_OVERWRITE = Object.freeze([question.outputFilepath, questi
 
 const OUTPUT_FILEPATH_OVERWRITE_CONFIRM = Object.freeze([...OUTPUT_FILEPATH_OVERWRITE, question.confirm]);
 
-const questions = Object.values(question);
+const questions = allQuestions;
 
 const writeToFile = async (fileName, data, callback) => writeFile(fileName, data, callback);
 
