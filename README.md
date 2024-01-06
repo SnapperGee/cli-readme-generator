@@ -5,9 +5,9 @@ Generate a readme markdown file via an interactive CLI.
 ## Usage
 
 The user is presented with a series of prompts they can answer to configure the
-content of the generated markdown file. All input has leading and trailing white
-space trimmed. Some prompts are optional and are designated as such. These
-prompts are omitted if no input is given for them.
+content of the generated markdown file. The leading and trailing white space is
+trimmed from all input. Some prompts are optional and are designated as such.
+These prompts are omitted if no input is given for them.
 
 ## Prompts
 
@@ -44,7 +44,7 @@ markdown file:
    The `tests` prompt sets the text content of the *Tests* section.
    It can optionally be left blank to be omitted from the generated markdown.
 
-1. **license**
+1. **License**
 
    The `license` prompt presents the user a list of licenses to choose from that
    sets the *license shield link image* located near the top of the generated
@@ -60,7 +60,7 @@ markdown file:
 
    The `email` prompt sets the email address that is linked to as a contact in
    the *Questions* section. If non empty input is given, it is required to have a
-   single att, `'@'`, character, at least 1 period, `'.'`, character and can't
+   single att (`'@'`) character, at least 1 period, `'.'`, character and can't
    contain any white space. It can optionally be left blank to be omitted from
    the generated markdown.
 
@@ -68,11 +68,11 @@ markdown file:
 
    The `outputFilepath` prompt sets the file name/path of the generated markdown
    file. Non blank input that can be resolved to a path that doesn't exist or
-   points to an pre-existing file to overwrite is required.
+   points to a preexisting file to overwrite is required.
 
-An invalid output file name/path will result in the user being reprompted for a
-file name/path. If a negative response is given for the final confirmation step,
-then the user is given the option to change previous answers to prompts.
+An invalid output file name/path will result in the user being reprompted for if.
+If a negative response is given for the final confirmation step, then the user is
+given the option to change previous answers to prompts.
 
 ## Examples
 
